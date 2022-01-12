@@ -1,0 +1,35 @@
+{
+  "version":1.1,
+  "tr:application-asset-insight-id":"201430",
+  "tr:environment-type":"DEVELOPMENT",
+  "tr:financial-identifier":"661431002",
+  "tr:resource-owner":"APP-L2-SAP-BASIS-TR",
+  "tr:project-name":"PMDM",
+  "aws_account":"003977924856",
+  "region":"us-east-1",
+  "short_name":"pmdm",
+
+   "security_group_ec2": [
+      {
+        "type": "ec2",
+        "internal_or_external": "int",
+        "tr:service-name": "web",
+        "ec2_inbound": [
+          "sg-07c3d872359213163",
+          "sg-0891f622b253f3365",
+          "sg-0891f622b253f3365",
+          "sg-06ddeeafe7449a95f ",
+          "sg-07c3d872359213163 ",
+          "sg-0a36e84e50544c8ca "
+        ],
+        "network_inbound": {
+          "22-22": [ "bastion ssh" ],
+          "3389-3389": [ "bastion rdp" ],
+          "5985-5985": [ "bastion tcp" ]
+        },
+        "outbound": {
+          "any": "any"
+        }
+      }
+   ]
+ }

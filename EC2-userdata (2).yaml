@@ -1,0 +1,47 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: webserver installation
+
+Parameters:
+  MyKeyName:
+    Type: AWS::EC2::KeyPair::KeyName 
+    Description: Select the key Pair 
+
+Resources:
+  
+  MySecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: My SG with port 22, 8080 and 80 inbound
+      SecurityGroupIngress:
+        - IpProtocol: All  
+          FromPort: '0'
+          ToPort: '65535'
+          CidrIp: 0.0.0.0/0
+
+  MyEc2Instance:
+    Type: AWS::EC2::Instance
+    Description: linux instanceType
+    Properties:
+      ImageId: ami-0dc2d3e4c0f9ebd18
+      InstanceType: t2.micro 
+      KeyName: !Ref MyKeyName 
+      SecurityGroups: 
+         - !Ref MySecurityGroup
+      UserData: 
+         Fn::Base64: |  
+           #!/bin/bash 
+           sudo yum update -y 
+           mkdir /home/ec2-user/kamal
+           cd /home/ec2-user/kamal
+           wget https://downloads.apache.org/tomcat/tomcat-9/v9.0.50/bin/apache-tomcat-9.0.50.tar.gz
+           tar -zvxf apache-tomcat-9.0.50.tar.gz 
+           sudo yum install java -y 
+           sudo ln -s /home/ec2-user/kamal/apache-tomcat-9.0.50/bin/startup.sh /usr/bin/tomcatup 
+           sudo ln -s /home/ec2-user/kamal/apache-tomcat-9.0.50/bin/shutdown.sh /usr/bin/tomcatdown 
+           sudo tomcatup 
+
+Outputs:
+  APPURL:
+    Description: Tomcat webserver url 
+    Value: !Sub 'http://${MyEc2Instance.PublicDnsName}:8080'
+
